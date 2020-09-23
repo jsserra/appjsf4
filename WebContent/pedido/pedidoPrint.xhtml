@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+	<title>appjsf4 - Formulário de Pedido</title>
+	<f:metadata>
+		<f:viewAction action="#{pedidoBean.carregar}" />
+	</f:metadata>
+</h:head>
+
+<h:body>
+	<h:messages id="mensagens" />
+	<h:form id="formulario">
+
+		<fieldset>
+			<legend>Pedido</legend>
+			<h:panelGrid columns="4" cellpadding="5">
+
+				<h:outputLabel value="Número: " for="codigoPedido" />
+				<h:outputText id="codigoPedido" value="#{pedidoBean.pedidoIdNovo}" />
+
+				<h:outputLabel value="Data: " for="dataPedido" />
+				<h:outputText id="dataPedido" value="#{pedidoBean.data}">
+					<f:convertDateTime dateStyle="default" pattern="dd/MM/yyyy" />
+				</h:outputText>
+
+			</h:panelGrid>
+
+			<fieldset>
+				<legend>Cliente</legend>
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel value="Nome: #{pedidoBean.cliente.nome}"
+						for="nomeCliente" />
+					<h:outputLabel id="cpf" value="CPF: #{pedidoBean.cliente.cpf}"
+						rendered="true" />
+
+				</h:panelGrid>
+			</fieldset>
+
+			<fieldset>
+				<legend>Itens do Pedido</legend>
+				<h:dataTable value="#{pedidoBean.itensPedido}" var="itens"
+					id="tabelaItens" cellspacing="15">
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{itens.produto.id}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Descrição</f:facet>
+						<h:outputText value="#{itens.produto.descricao}" />
+					</h:column>
+
+					<h:column>
+						<center>
+							<f:facet name="header">Und</f:facet>
+							<h:outputText value="#{itens.produto.und}" />
+						</center>
+					</h:column>
+
+					<h:column>
+						<center>
+							<f:facet name="header">Qtd</f:facet>
+							<h:outputText value="#{itens.qtd}">
+								<f:convertNumber pattern="#,##0.00" />
+							</h:outputText>
+						</center>
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Valor Unitário</f:facet>
+						<div align="right">
+							<h:outputText value="#{itens.valorNovo}">
+								<f:convertNumber pattern="R$ #,##0.00"></f:convertNumber>
+							</h:outputText>
+						</div>
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Valor Total</f:facet>
+						<div align="right">
+							<h:outputText value="#{itens.valorNovo * itens.qtd}">
+								<f:convertNumber pattern="R$ #,##0.00"/>
+							</h:outputText>
+						</div>
+					</h:column>
+				</h:dataTable>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Total</legend>
+				<div align="right">
+					<h:panelGrid columns="2">
+					
+						<h:outputLabel value="Valor do Pedido: "/>
+						<h:outputText id="valorPedido" value="#{pedidoBean.valorTotal}">
+							<f:convertNumber pattern="R$ #,##0.00"/>
+						</h:outputText>
+					
+					</h:panelGrid>
+				</div>
+			</fieldset>
+
+		</fieldset>
+		
+		<h:commandButton value="Imprimir Pedido" onclick="window.print()"/>
+		<h:commandButton value="voltar" action="/home?faces-redirect=true"/>
+
+	</h:form>
+</h:body>
+</html>

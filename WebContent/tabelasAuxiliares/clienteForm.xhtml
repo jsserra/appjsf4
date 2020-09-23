@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/templates/modeloPagina.xhtml">
+	<ui:define name="title">
+		appjsf4 - Formulário Cadastro de Clientes
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formularioCliente">
+			<h:messages id="mensagens" />
+			<fieldset title="Dados do Cliente">
+				<legend>Dados do Cliente</legend>
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel value="Nome:" for="nome" />
+					<h:inputText id="nome" value="#{clienteBean.cliente.nome}" required="true"
+						requiredMessage="Informe um nome!" size="45" maxlength="40"
+						validatorMessage="O nome não pode ser maior que 40">
+						<f:validateLength maximum="40" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputText>
+
+					<h:outputLabel value="CPF:" for="cpf" />
+					<h:inputText id="cpf" value="#{clienteBean.cliente.cpf}" validator="validaCPF" required="true"
+						requiredMessage="Informe um CPF" size="14" maxlength="14" redisplay="true"
+						onkeypress="mascaraCampo(this,'###.###.###-##')">
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputText>
+
+				</h:panelGrid>
+			</fieldset>
+			<br />
+			<h:commandButton value="Gravar" action="#{clienteBean.gravar}">
+				<f:ajax execute="@form"
+					render="@form :formularioTabelaCliente:tabelaCliente" />
+			</h:commandButton>
+			<h:commandButton value="Cancelar" action="/home?faces-redirect=true"
+				immediate="true" />
+		</h:form>
+		<br />
+
+		<h:form id="formularioTabelaCliente">
+			<fieldset title="Lista de Clientes">
+				<legend>Lista de Clientes</legend>
+
+				<h:dataTable value="#{clienteBean.lista}" var="cliente"
+					id="tabelaCliente" cellpadding="5">
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{cliente.id}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{cliente.nome}" />
+					</h:column>
+
+					<h:column headerText="Opções">
+						<center>
+							<f:facet name="header">Tools</f:facet>
+						<center>
+							<h:commandButton action="#{clienteBean.editar(cliente)}"
+								image="/resources/img/edit.png" immediate="true" />
+							<h:commandButton action="#{clienteBean.apagar(cliente)}"
+								image="/resources/img/delete.png" immediate="true" />
+						</center>
+						</center>
+					</h:column>
+
+				</h:dataTable>
+			</fieldset>
+		</h:form>
+		
+		<script type="text/javascript" charset="UTF8">
+			function mascaraCampo(item, formato){
+				var campo = item.value.length;
+				var resultado = formato.substring(0,1);
+				var texto = formato.substring(campo);
+				if(texto.substring(0,1) != resultado){
+					item.value += texto.substring(0,1);
+				}
+			}
+		</script>
+	</ui:define>
+</ui:composition>
+
+</html>

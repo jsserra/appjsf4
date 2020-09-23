@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/templates/modeloPagina.xhtml">
+	<ui:define name="title">
+		appjsf4 - Formulário Cadastro de usuários do Sistema
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formulario">
+			<h:messages id="mensagens" />
+			<fieldset title="Dados do Usuário">
+				<legend>Dados do Usuário</legend>
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel value="Nome" for="nome" />
+					<h:inputText id="nome" value="#{usuarioBean.usuario.nome}" required="true"
+						requiredMessage="Informe um nome!" size="12"
+						validatorMessage="Mínimo de 3 e Máximo de 10 caracteres para o nome!">
+						<f:validateLength maximum="10" minimum="3" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputText>
+
+					<h:outputLabel value="Senha" for="senha1" />
+					<h:inputSecret id="senha1" value="#{usuarioBean.usuario.senha}" required="true"
+						requiredMessage="Informe uma senha!" size="8" redisplay="true"
+						validatorMessage="Mínimo de 3 e Máximo de 6 caracteres para a senha!">
+						<f:validateLength maximum="6" minimum="3" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputSecret>
+
+					<h:outputLabel value="Confirma Senha" for="senha2" />
+					<h:inputSecret id="senha2" required="true"
+						requiredMessage="Confirme a mesma senha!" size="8"
+						validatorMessage="Mínimo de 3 e Máximo de 6 caracteres para a senha!">
+						<f:validateLength maximum="6" minimum="3" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputSecret>
+				</h:panelGrid>
+			</fieldset>
+			<br />
+			<h:commandButton value="Gravar" action="#{usuarioBean.gravar}"
+				onclick="return passwordOK(this.form);">
+				<f:ajax execute="@form"
+					render="@form :formularioTabelaUsuario:tabelaUsuario" />
+			</h:commandButton>
+			<h:commandButton value="Cancelar" action="/home?faces-redirect=true"
+				immediate="true" />
+		</h:form>
+		<br />
+
+		<h:form id="formularioTabelaUsuario">
+			<fieldset title="Lista de Usuários">
+				<legend>Lista de Usuários</legend>
+
+				<h:dataTable value="#{usuarioBean.lista}" var="usuario"
+					id="tabelaUsuario" cellpadding="5">
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{usuario.id}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{usuario.nome}" />
+					</h:column>
+
+					<h:column headerText="Opções">
+						<center>
+							<f:facet name="header">Tools</f:facet>
+						<center>
+							<h:commandButton action="#{usuarioBean.editar(usuario)}"
+								image="/resources/img/edit.png" immediate="true" />
+							<h:commandButton action="#{usuarioBean.excluir(usuario)}"
+								image="/resources/img/delete.png" immediate="true" />
+						</center>
+						</center>
+					</h:column>
+
+				</h:dataTable>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

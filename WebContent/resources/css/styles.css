@@ -1,0 +1,79 @@
+body{
+	background-color: #dddddf;
+}
+
+#cabecalho{
+	background: white;
+	border: 1px solid darkGray;
+	padding: 30px;
+	margin-bottom: 10px;
+	height: 40px;
+	
+}
+
+#barraLateral{
+	border: thin solid lightGray;
+	background: white;
+	padding: 5px;
+	width: 35px;
+	text-align: center
+}
+
+#conteudo{
+	border: thin solid lightGray;
+	background: #fefeef;
+	position: absolute;
+	top: 120px;
+	right: 8px;
+	left: 60px;
+	height: calc(100% - 170px);
+	padding:5px;
+	overflow: auto;
+}
+
+#rodape{
+	border: thin solid lightGray;
+	background: darkGray;
+	position: absolute;
+	bottom: 0;
+	width: calc(100% - 27px);
+	height: 20px;
+	padding: 5px;
+}
+
+.header{
+	font-size: 2.1em;
+	font-style: italic; 
+	font-family: Palatino;
+	text-align: center;
+}
+
+.logo{
+	position: absolute;
+	top: 10px;
+	left: 40px;
+	z-index: 1;
+	width: 100px;
+	height: 90px;
+}
+
+.footer{
+	font-size: 1em;
+	font-style: italic;
+	font-family: sans-serif;
+	color: red;
+	text-align: center;
+}
+
+.labelTitulo{
+	font-weight: bold;
+	font-family: sans-serif;
+	font-size: 1.1em;
+}
+
+label{
+	font-weight: bold;
+	font-family: sans-serif;
+	font-size: .9em;
+	color: tomato;
+}

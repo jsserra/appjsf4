@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/templates/modeloPagina.xhtml">
+	<ui:define name="title">
+		appjsf4 - Formulário Cadastro de Produtos
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formulario">
+
+			<h:messages id="mensagens" />
+			<fieldset title="Dados do Produto">
+				<legend>Dados do Produto</legend>
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel value="Descrição:" for="descricao" />
+					<h:inputText id="descricao"
+						value="#{produtoBean.produto.descricao}" required="true"
+						requiredMessage="Informe a descrição!" size="25" maxlength="20"
+						validatorMessage="A descrição não pode ser maior que 20.">
+						<f:validateLength maximum="20" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputText>
+
+					<h:outputLabel value="Und" for="und" />
+					<h:inputText id="und" value="#{produtoBean.produto.und}"
+						required="true" requiredMessage="Informe o tipo de unidade"
+						size="4" maxlength="3"
+						validatorMessage="O tipo de unidade não pode ser superior a 3">
+						<f:validateLength maximum="3" />
+						<f:ajax event="blur" render="mensagens" />
+					</h:inputText>
+
+				</h:panelGrid>
+			</fieldset>
+			<br />
+			<h:commandButton value="Gravar" action="#{produtoBean.gravar}">
+				<f:ajax execute="@form"
+					render="@form :formularioTabelaProduto:tabelaProduto" />
+			</h:commandButton>
+			<h:commandButton value="Cancelar" action="/home?faces-redirect=true"
+				immediate="true" />
+		</h:form>
+		<br />
+
+		<h:form id="formularioTabelaProduto">
+			<fieldset title="Lista de Produtos">
+				<legend>Lista de Produtos</legend>
+
+				<h:dataTable value="#{produtoBean.lista}" var="produto"
+					id="tabelaProduto" cellspacing="5">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{produto.id}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{produto.descricao}" />
+					</h:column>
+
+					<h:column headerText="Opções">
+						<center>
+							<f:facet name="header">Tools</f:facet>
+							<center>
+								<h:commandButton action="#{produtoBean.editar(produto)}"
+									image="/resources/img/edit.png" immediate="true" />
+								<h:commandButton action="#{produtoBean.apagar(produto)}"
+									image="/resources/img/delete.png" />
+							</center>
+						</center>
+					</h:column>
+
+				</h:dataTable>
+			</fieldset>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+
+</html>

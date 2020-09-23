@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/templates/modeloPagina.xhtml">
+	<ui:define name="title">
+		appjsf4 - Formulário Pedido
+	</ui:define>
+
+	<ui:define name="resources">
+		<f:metadata>
+			<f:viewAction action="#{pedidoBean.carregar}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:messages id="mensagens" />
+		<h:form id="formulario">
+
+			<fieldset>
+				<legend>Pedido</legend>
+				<h:panelGrid columns="4" cellpadding="5">
+
+					<h:outputLabel value="Número: " for="codigoPedido" />
+					<h:outputText id="codigoPedido" value="#{pedidoBean.pedidoIdNovo}" />
+
+					<h:outputLabel value="Data: " for="dataPedido" />
+					<h:outputText id="dataPedido" value="#{pedidoBean.data}">
+						<f:convertDateTime dateStyle="default" pattern="dd/MM/yyyy" />
+					</h:outputText>
+
+				</h:panelGrid>
+
+				<fieldset>
+					<legend>Cliente</legend>
+					<h:panelGrid columns="4" cellpadding="5">
+
+						<h:outputLabel value="Nome: " for="nomeCliente" />
+						<h:selectOneMenu id="nomeCliente" value="#{pedidoBean.clienteId}">
+							<f:selectItems value="#{pedidoBean.listaClientes}" var="cliente"
+								itemValue="#{cliente.id}" itemLabel="#{cliente.nome}" />
+							<f:ajax events="blur, change" render="cpf"
+								listener="#{pedidoBean.atualizarCliente}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel id="cpf" value="CPF.: #{pedidoBean.cliente.cpf}"
+							rendered="true" />
+
+					</h:panelGrid>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Dados do produto</legend>
+					<h:panelGrid columns="9" cellpadding="5">
+					
+						<h:outputLabel value="Descrição: " for="descricao"/>
+						<h:selectOneMenu id="descricao" value="#{pedidoBean.produtoId}">
+							<f:selectItems value="#{pedidoBean.listaProdutos}" var="produto"
+								itemValue="#{produto.id}" itemLabel="#{produto.descricao}"/>
+							<f:ajax event="blur" render="und valor" listener="#{pedidoBean.atualizarProduto}"/>							
+						</h:selectOneMenu>
+						
+						<h:outputLabel id="und" value="UND: #{pedidoBean.produto.und}"/>
+						
+						<h:outputLabel class="label" for="qtd" value="QTD: "/>
+						<h:inputText id="qtd" value="#{pedidoBean.produtoQtd}" size="10">
+							<f:convertNumber minFractionDigits="2"/>
+						</h:inputText>
+						
+						<h:outputLabel id="valor" value="#{pedidoBean.produto.valor}">
+							<f:convertNumber pattern="R$ #,##0.00"/>
+						</h:outputLabel>
+						
+						<h:commandButton value="In" action="#{pedidoBean.adicionarProdutosNaLista}">
+							<f:ajax execute="qtd" render="tabelaItens qtd mensagens valorPedido"/>
+						</h:commandButton>
+					</h:panelGrid>
+				
+				</fieldset>
+				
+				<fieldset>
+					<legend>Itens do Pedido</legend>
+					<h:dataTable value="#{pedidoBean.listaItens}" var="itens"
+						id="tabelaItens" cellspacing="5">
+						
+						<h:column>
+							<f:facet name="header">ID</f:facet>
+							<h:outputText value="#{itens.produto.id}"/>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Descrição</f:facet>
+							<h:outputText value="#{itens.produto.descricao}"/>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Und</f:facet>
+							<h:outputText value="#{itens.produto.und}"/>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Qtd</f:facet>
+							<h:outputText value="#{itens.qtd}">
+								<f:convertNumber pattern="#,##0.00"/>
+							</h:outputText>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Valor Unitário</f:facet>
+							<h:outputText value="#{itens.valorNovo}">
+								<f:convertNumber pattern="R$ #,##0.00"/>
+							</h:outputText>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Valor Total</f:facet>
+							<h:outputText value="#{itens.valorNovo * itens.qtd}">
+								<f:convertNumber pattern="R$ #,##0.00"/>
+							</h:outputText>
+						</h:column>
+						
+						<h:column>
+							<center>
+							<f:facet name="header">X</f:facet>
+							<h:commandButton
+								 action="#{pedidoBean.removerProdutoDaLista(itens)}"
+								 image="/resources/img/delete.png" immediate="true" />
+							</center>							
+						</h:column>
+						
+					</h:dataTable>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Total</legend>
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputLabel value="Valor do Pedido: "/>
+						<h:outputText id="valorPedido" value="#{pedidoBean.valorTotal}">
+							<f:convertNumber pattern="R$ #,##0.00"/>
+						</h:outputText>
+					
+					</h:panelGrid>
+					
+					<h:commandButton value="Emitir Pedido" action="#{pedidoBean.gravar}" immediate="true"/>
+					<h:commandButton value="Cancelar" action="/home?faces-redirect=true"/>
+				
+				</fieldset>
+				
+			</fieldset>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+
+</html>

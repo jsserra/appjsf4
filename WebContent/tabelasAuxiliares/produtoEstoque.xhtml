@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	
+<ui:composition template="/templates/modeloPagina.xhtml">
+	<ui:define name="title">
+		appjsf4 - Formulário Cadastro de Produtos
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formulario">
+		<h:messages id="mensagens"/>
+		<fieldset title="Dados do Produto">
+			<legend>Lançar Informações no Estoque</legend>
+			<h:panelGrid columns="2" cellpadding="5">
+			
+				<h:outputLabel value="Descrição: " for="descricao"/>
+				<h:selectOneMenu id="descricao" value="#{produtoBean.produtoId}">
+					<f:selectItems value="#{produtoBean.lista}" var="produto"
+					 itemValue="#{produto.id}" itemLabel="#{produto.descricao}"/>
+					 <f:ajax event="blur" render="und qtd valor" listener="#{produtoBean.atualizarProduto}"/>
+				</h:selectOneMenu>
+				
+				<h:outputLabel value="Und: " for="und"/>
+				<h:inputText id="und" value="#{produtoBean.produto.und}" readonly="true" size="4"/> 
+								
+				<h:outputLabel value="Qtd: " for="qtd" class="label"/>
+				<h:inputText id="qtd" value="#{produtoBean.produto.qtd}" size="10" >
+					<f:convertNumber minFractionDigits="2"/>
+				</h:inputText>
+				
+				<h:outputLabel value="Valor: " for="valor" class="label"/>
+				<h:inputText id="valor" value="#{produtoBean.produto.valor}" size="10">
+					<f:convertNumber minFractionDigits="2"/>
+				</h:inputText>
+			</h:panelGrid>
+		</fieldset>
+		<br/>
+			<h:commandButton value="Lançar" action="#{produtoBean.gravar}">
+				<f:ajax execute="@form" render="@form :formularioTabelaProduto:tabelaProduto"/>
+			</h:commandButton>
+			<h:commandButton value="Cancelar" action="/home?faces-redirect=true" immediate="true"/>		
+		</h:form>
+		<br/>
+		
+		<h:form id="formularioTabelaProduto">
+			<fieldset title="Lista de Produtos">
+				<legend>Lista de Produtos</legend>
+				
+				<h:dataTable value="#{produtoBean.lista}" var="produto" id="tabelaProduto" cellspacing="5">
+				
+					<h:column>
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{produto.id}"/>
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{produto.descricao}"/>
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">Und</f:facet>
+					<h:outputText value="#{produto.und}"/>
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">Qtd</f:facet>
+					<h:outputText value="#{produto.qtd}">
+					<f:convertNumber pattern="R$ #,##0.00"/>
+					</h:outputText>
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">Valor Unitário</f:facet>
+					<div align="right">
+						<h:outputText value="#{produto.valor}">
+							<f:convertNumber pattern="R$ #,##0.00"/>
+						</h:outputText>
+					</div>
+					</h:column>
+				</h:dataTable>
+			</fieldset>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+
+
+
+
+</html>
